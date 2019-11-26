@@ -1,13 +1,13 @@
 # Vx.x.x (Pre-release)
 
 ## Important Notes
-
+- [#335] The session expiry for the OIDC provider is now taken from the Token Response (expires_in) rather than from the id_token (exp) 
 ## Breaking Changes
 
 ## Changes since v4.1.0
 - [#325](https://github.com/pusher/oauth2_proxy/pull/325) dist.sh: use sha256sum (@syscll)
 - [#179](https://github.com/pusher/oauth2_proxy/pull/179) Add Nextcloud provider (@Ramblurr)
-
+- [#335](https://github.com/pusher/oauth2_proxy/pull/335) OIDC Provider support for empty id_tokens in the access token refresh response (@howzat)
 # v4.1.0
 
 ## Release Highlights

@@ -9,7 +9,6 @@
 
 ## Changes since v5.0.0
 - [#335](https://github.com/pusher/oauth2_proxy/pull/335) OIDC Provider support for empty id_tokens in the access token refresh response (@howzat)
-
 - [#353](https://github.com/pusher/oauth2_proxy/pull/353) Fix login page fragment handling after soft reload on Firefox (@ffdybuster)
 
 # v5.0.0

@@ -1,0 +1,145 @@
+# Pipeline to build and release oauth2_proxy
+# Based on https://github.com/vito/booklit/blob/master/ci/pipeline.yml
+
+groups:
+  - name: dev
+    jobs: [tests, rc, ship]
+
+  - name: semver
+    jobs: [major, minor, patch]
+
+resource_types:
+  - name: github-status
+    type: registry-image
+    source:
+      repository: resource/github-status
+
+resources:
+  - name: oauth2_proxy
+    type: git
+    icon: github-circle
+    source:
+      uri: git@github.com:states-of-guernsey/oauth2_proxy.git
+      branch: 4.0.0-fix
+      private_key: ((github_private_key))
+      ignore_paths:
+        - ci/
+
+  - name: ci
+    type: git
+    icon: github-circle
+    source:
+      uri: git@github.com:states-of-guernsey/oauth2_proxy.git
+      branch: 4.0.0-fix
+      private_key: ((github_private_key))
+      paths:
+        - ci/
+
+  - name: gh-status
+    type: github-status
+    icon: bug-check-outline
+    source:
+      repo: states-of-guernsey/oauth2_proxy
+      access_token: ((github_access_token))
+
+  - name: version
+    type: semver
+    icon: tag
+    source:
+      region_name: eu-west-1
+      bucket: ((build_artifacts_bucket.bucket_name))
+      access_key_id: ((build_artifacts_bucket.access_key_id))
+      secret_access_key: ((build_artifacts_bucket.secret_access_key))
+      initial_version: 4.0.0
+      key: oauth2_proxy/current-version
+
+  - name: oauth2_proxy-rel
+    type: github-release
+    icon: truck
+    source:
+      owner: states-of-guernsey
+      repository: oauth2_proxy
+      access_token: ((github_access_token))
+
+jobs:
+- name: tests
+  plan:
+    - in_parallel:
+      - get: oauth2_proxy
+        trigger: true
+      - get: ci
+    - put: gh-status
+      params: {path: oauth2_proxy, state: pending}
+    - task: fast
+      file: ci/ci/tasks/fast-tests.yaml
+      on_success:
+        put: gh-status
+        params: {path: oauth2_proxy, state: success}
+      on_failure:
+        put: gh-status
+        params: {path: oauth2_proxy, state: failure}
+
+- name: rc
+  serial_groups: [version]
+  plan:
+    - in_parallel:
+      - get: oauth2_proxy
+        passed: [tests]
+        trigger: true
+      - get: version
+        params: {pre: rc}
+    - put: version
+      params: {file: version/version}
+
+- name: ship
+  serial_groups: [version]
+  plan:
+    - in_parallel:
+      - get: oauth2_proxy
+        passed: [rc]
+      - get: final-version
+        resource: version
+        passed: [rc]
+        params: {bump: final}
+      - get: ci
+    - in_parallel:
+      - task: build
+        file: ci/ci/tasks/build.yaml
+        input_mapping: {version: final-version}
+      - task : build-release-info
+        file: ci/ci/tasks/build-release-info.yaml
+        input_mapping: {version: final-version}
+    - in_parallel:
+      - put: version
+        params: {file: final-version/version}
+      - put: oauth2_proxy-rel
+        params:
+          tag: final-version/version
+          tag_prefix: v
+          committish: oauth2_proxy/.git/HEAD
+          name: release-info/release-name
+          globs: [assets/*]
+
+- name: major
+  serial_groups: [version]
+  plan:
+    - put: version
+      params: {bump: major, pre: rc}
+
+- name: minor
+  serial_groups: [version]
+  plan:
+    - put: version
+      params: {bump: minor, pre: rc}
+
+- name: patch
+  serial_groups: [version]
+  plan:
+    - get: version
+      passed: [ship]
+      params: {bump: patch, pre: rc}
+      trigger: true
+    - put: version
+      params: {file: version/version}
+
+

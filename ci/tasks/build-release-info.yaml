@@ -6,10 +6,10 @@ image_resource:
 
 inputs:
   - name: version
-  - name: ssmcreds
+  - name: ci
 
 outputs:
   - name: release-info
 
 run:
-  path: ssmcreds/ci/tasks/scripts/build-release-info.sh
+  path: ci/ci/tasks/scripts/build-release-info.sh

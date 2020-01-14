@@ -1,0 +1,15 @@
+platform: linux
+
+image_resource:
+  type: registry-image
+  source: {repository: concourse/unit}
+
+inputs:
+  - name: version
+  - name: ssmcreds
+
+outputs:
+  - name: release-info
+
+run:
+  path: ssmcreds/ci/tasks/scripts/build-release-info.sh

@@ -7,11 +7,12 @@ image_resource:
     tag: 1.12
 
 inputs:
+  - name: ci
   - name: oauth2_proxy
 
 caches:
   - path: gopath/
 
 run:
-  path: oauth2_proxy/ci/tasks/scripts/fast-tests.sh
+  path: ci/ci/tasks/scripts/fast-tests.sh
 

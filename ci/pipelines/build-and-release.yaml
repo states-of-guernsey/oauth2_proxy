@@ -116,7 +116,7 @@ jobs:
         params:
           tag: final-version/version
           tag_prefix: v
-          committish: oauth2_proxy/.git/HEAD
+          committish: oauth2_proxy/.git/short_ref
           name: release-info/release-name
           globs: [assets/*]
 

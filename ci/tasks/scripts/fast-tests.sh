@@ -8,8 +8,7 @@ mkdir -p $GOPATH/src/github.com/pusher
 cp -R oauth2_proxy $GOPATH/src/github.com/pusher/oauth2_proxy
 
 cd $GOPATH/src/github.com/pusher/oauth2_proxy
-./configure
 
 echo
 echo "Running tests..."
-make tests
+GO111MODULE=on go test -v -race ./...

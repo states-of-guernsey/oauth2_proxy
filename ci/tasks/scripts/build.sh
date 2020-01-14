@@ -14,7 +14,7 @@ mkdir -p $GOPATH/src/github.com/pusher
 cp -R oauth2_proxy $GOPATH/src/github.com/pusher/oauth2_proxy
 
 ASSETS_DIR="$BASE_DIR/assets/"
-OUTPUT_PATH="$ASSETS_DIR/$BINARY-$VERSION.linux-amd64"
+OUTPUT_PATH="/tmp/$BINARY-$VERSION.linux-amd64"
 
 mkdir $OUTPUT_PATH
 
@@ -24,7 +24,7 @@ GO111MODULE=on GOOS=linux GOARCH=amd64 go build -ldflags="-X main.VERSION=$VERSI
   -o "$OUTPUT_PATH/$BINARY" github.com/pusher/oauth2_proxy
 
 shasum -a 256 $OUTPUT_PATH/$BINARY >$ASSETS_DIR/$BINARY-$VERSION.linux-amd64-sha256sum.txt
-tar -C $ASSETS_DIR -czvf $ASSETS_DIR/$BINARY-$VERSION.linux-amd64.tar.gz $BINARY-$VERSION.linux-amd64
+tar -C $OUTPUT_PATH -czvf $ASSETS_DIR/$BINARY-$VERSION.linux-amd64.tar.gz $BINARY
 
 echo "printing VERSION..."
 $OUTPUT_PATH/$BINARY -version

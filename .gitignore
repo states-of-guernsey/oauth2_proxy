@@ -39,3 +39,5 @@ _testmain.go
 # vi Dockerfile.dev
 # docker build -f Dockerfile.dev .
 Dockerfile.dev
+
+.idea

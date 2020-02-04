@@ -20,7 +20,7 @@ resources:
     icon: github-circle
     source:
       uri: git@github.com:states-of-guernsey/oauth2_proxy.git
-      branch: 4.0.0-fix
+      branch: 5.0.0-fix
       private_key: ((github_private_key))
       ignore_paths:
         - ci/
@@ -30,7 +30,7 @@ resources:
     icon: github-circle
     source:
       uri: git@github.com:states-of-guernsey/oauth2_proxy.git
-      branch: 4.0.0-fix
+      branch: 5.0.0-fix
       private_key: ((github_private_key))
       paths:
         - ci/
@@ -50,7 +50,7 @@ resources:
       bucket: ((build_artifacts_bucket.bucket_name))
       access_key_id: ((build_artifacts_bucket.access_key_id))
       secret_access_key: ((build_artifacts_bucket.secret_access_key))
-      initial_version: 4.0.0
+      initial_version: 5.0.0
       key: oauth2_proxy/current-version
 
   - name: oauth2_proxy-rel

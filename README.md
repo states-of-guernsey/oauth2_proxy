@@ -48,3 +48,7 @@ If you would like to reach out to the maintainers, come talk to us in the `#oaut
 ## Contributing
 
 Please see our [Contributing](CONTRIBUTING.md) guidelines. For releasing see our [release creation guide](RELEASE.md).
+
+## This repo is deprecated
+This repository has served its purpose of strategic solution.
+New docker image is used from docker repo: `quay.io/oauth2-proxy/oauth2-proxy` version `v5.1.0`. This version will be updated as per releases of docker images.
